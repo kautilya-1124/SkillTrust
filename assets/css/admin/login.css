@@ -1,0 +1,14 @@
+        :root {
+            --bg: #f3f5fb;
+            --card: rgba(255,255,255,0.82);
+            --border: #e5e9f2;
+            --text: #0f172a;
+            --muted: #64748b;
+            --accent: #6366f1;
+            --accent2: #818cf8;
+        }
+        body { font-family: 'Sora', sans-serif; background: var(--bg); }
+        .glass { background: var(--card); border: 1px solid var(--border); backdrop-filter: blur(12px); }
+        .fade-in { animation: fadeIn .35s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+    

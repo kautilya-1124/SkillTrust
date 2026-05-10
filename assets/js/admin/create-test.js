@@ -1,0 +1,1 @@
+window.AdminCommonPage.initPage('adminCreateTestData');

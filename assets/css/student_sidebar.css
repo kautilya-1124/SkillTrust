@@ -1,0 +1,209 @@
+html,
+body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(2, 6, 23, 0.64);
+    backdrop-filter: blur(2px);
+    z-index: 40;
+}
+
+.sidebar-overlay.active {
+    display: block;
+}
+
+.student-sidebar {
+    width: 16.25rem;
+    background:
+        radial-gradient(circle at top left, rgba(99, 102, 241, 0.18), transparent 32%),
+        linear-gradient(180deg, rgba(15, 23, 42, 0.98), rgba(9, 15, 28, 0.98));
+    border-right: 1px solid rgba(99, 102, 241, 0.14);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(24px);
+}
+
+.student-sidebar__brand,
+.student-sidebar__footer {
+    border-color: rgba(99, 102, 241, 0.12);
+}
+
+.student-sidebar__logo {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 0 28px rgba(99, 102, 241, 0.28);
+}
+
+.student-sidebar__caption {
+    color: #64748b;
+}
+
+.student-sidebar__item {
+    position: relative;
+    min-height: 3.35rem;
+    color: #cbd5f5;
+    transition: all 0.25s ease;
+}
+
+.student-sidebar__item::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 62%;
+    border-radius: 999px;
+    background: linear-gradient(180deg, #6366f1, #8b5cf6);
+    transform: translateY(-50%) scaleY(0);
+    transition: transform 0.25s ease;
+}
+
+.student-sidebar__item:hover,
+.student-sidebar__item.active {
+    background: rgba(79, 70, 229, 0.16);
+    color: #ffffff;
+}
+
+.student-sidebar__item:hover::before,
+.student-sidebar__item.active::before {
+    transform: translateY(-50%) scaleY(1);
+}
+
+.student-sidebar__icon {
+    width: 2rem;
+    height: 2rem;
+    flex-shrink: 0;
+    border-radius: 0.85rem;
+    background: rgba(51, 65, 85, 0.74);
+    color: #96a3be;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    transition: all 0.25s ease;
+}
+
+.student-sidebar__icon svg {
+    width: 1rem;
+    height: 1rem;
+}
+
+.student-sidebar__item:hover .student-sidebar__icon,
+.student-sidebar__item.active .student-sidebar__icon {
+    background: rgba(79, 70, 229, 0.24);
+    color: #dbe4ff;
+}
+
+.student-sidebar__badge {
+    background: rgba(79, 70, 229, 0.24);
+    color: #cdd4ff;
+    box-shadow: inset 0 0 0 1px rgba(129, 140, 248, 0.12);
+}
+
+.student-sidebar__user {
+    background: rgba(30, 41, 59, 0.72);
+    border: 1px solid rgba(99, 102, 241, 0.1);
+    box-shadow: 0 18px 36px rgba(2, 6, 23, 0.24), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.student-sidebar__avatar {
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    box-shadow: 0 0 22px rgba(99, 102, 241, 0.24);
+}
+
+.student-main {
+    margin-left: 0;
+    width: 100%;
+}
+
+@media (min-width: 1024px) {
+    .student-main {
+        margin-left: 16.25rem;
+        width: calc(100% - 16.25rem);
+    }
+}
+
+/* =============================================
+   LIGHT MODE OVERRIDES
+   ============================================= */
+html[data-theme="light"] .student-sidebar,
+html.skilltrust-light .student-sidebar {
+    background: linear-gradient(180deg, #ffffff, #f1f5f9);
+    border-right: 1px solid rgba(99, 102, 241, 0.15);
+    box-shadow: 2px 0 16px rgba(99, 102, 241, 0.06);
+}
+
+html[data-theme="light"] .student-sidebar__brand,
+html.skilltrust-light .student-sidebar__brand,
+html[data-theme="light"] .student-sidebar__footer,
+html.skilltrust-light .student-sidebar__footer {
+    border-color: rgba(99, 102, 241, 0.12);
+}
+
+html[data-theme="light"] .student-sidebar__caption,
+html.skilltrust-light .student-sidebar__caption {
+    color: #94a3b8;
+}
+
+html[data-theme="light"] .student-sidebar__item,
+html.skilltrust-light .student-sidebar__item {
+    color: #334155;
+}
+
+html[data-theme="light"] .student-sidebar__item:hover,
+html[data-theme="light"] .student-sidebar__item.active,
+html.skilltrust-light .student-sidebar__item:hover,
+html.skilltrust-light .student-sidebar__item.active {
+    background: rgba(99, 102, 241, 0.10);
+    color: #4f46e5;
+}
+
+html[data-theme="light"] .student-sidebar__icon,
+html.skilltrust-light .student-sidebar__icon {
+    background: rgba(241, 245, 249, 0.9);
+    color: #64748b;
+    border: 1px solid rgba(99, 102, 241, 0.10);
+}
+
+html[data-theme="light"] .student-sidebar__item:hover .student-sidebar__icon,
+html[data-theme="light"] .student-sidebar__item.active .student-sidebar__icon,
+html.skilltrust-light .student-sidebar__item:hover .student-sidebar__icon,
+html.skilltrust-light .student-sidebar__item.active .student-sidebar__icon {
+    background: rgba(99, 102, 241, 0.12);
+    color: #4f46e5;
+}
+
+html[data-theme="light"] .student-sidebar__badge,
+html.skilltrust-light .student-sidebar__badge {
+    background: rgba(99, 102, 241, 0.12);
+    color: #4f46e5;
+}
+
+html[data-theme="light"] .student-sidebar__user,
+html.skilltrust-light .student-sidebar__user {
+    background: rgba(241, 245, 249, 0.9);
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.06);
+}
+
+html[data-theme="light"] .sidebar-overlay,
+html.skilltrust-light .sidebar-overlay {
+    background: rgba(15, 23, 42, 0.4);
+}
+
+/* Brand name and user name text in light mode */
+html[data-theme="light"] .student-sidebar .text-white,
+html.skilltrust-light .student-sidebar .text-white {
+    color: #1e293b !important;
+}
+
+html[data-theme="light"] .student-sidebar .text-slate-400,
+html.skilltrust-light .student-sidebar .text-slate-400 {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .student-sidebar .text-slate-500,
+html.skilltrust-light .student-sidebar .text-slate-500 {
+    color: #94a3b8 !important;
+}
