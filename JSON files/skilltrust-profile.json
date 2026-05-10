@@ -1,0 +1,17 @@
+{
+  "exportedAt": "2026-04-03T05:56:25.489Z",
+  "name": "Alex Johnson",
+  "username": "alex_j",
+  "email": "alex.johnson@email.com",
+  "phone": "+1 (555) 123-4567",
+  "bio": "Aspiring full-stack developer focused on scalable web apps, clean APIs, and great UX.",
+  "skills": [
+    "PHP",
+    "JavaScript",
+    "React",
+    "MySQL",
+    "Node.js",
+    "Tailwind"
+  ],
+  "trustScore": 87
+}

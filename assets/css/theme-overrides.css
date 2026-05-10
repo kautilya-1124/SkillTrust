@@ -1,0 +1,87 @@
+@import url("./theme.css");
+
+/* =============================================
+   NAVBAR / TOPBAR LIGHT MODE
+   ============================================= */
+html[data-theme="light"] .navbar,
+html.skilltrust-light .navbar {
+    background: rgba(255, 255, 255, 0.92);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.1);
+    backdrop-filter: blur(16px);
+}
+
+html[data-theme="light"] .navbar input,
+html.skilltrust-light .navbar input {
+    color: #334155;
+}
+
+html[data-theme="light"] .navbar input::placeholder,
+html.skilltrust-light .navbar input::placeholder {
+    color: #94a3b8;
+}
+
+/* =============================================
+   DROPDOWN MENU LIGHT MODE
+   ============================================= */
+html[data-theme="light"] .dropdown-menu,
+html.skilltrust-light .dropdown-menu {
+    background: #ffffff;
+    border: 1px solid rgba(99, 102, 241, 0.12);
+    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.12);
+}
+
+html[data-theme="light"] .dropdown-menu .text-white,
+html.skilltrust-light .dropdown-menu .text-white {
+    color: #1e293b !important;
+}
+
+html[data-theme="light"] .dropdown-menu .text-slate-300,
+html[data-theme="light"] .dropdown-menu .text-slate-400,
+html[data-theme="light"] .dropdown-menu .text-slate-500,
+html.skilltrust-light .dropdown-menu .text-slate-300,
+html.skilltrust-light .dropdown-menu .text-slate-400,
+html.skilltrust-light .dropdown-menu .text-slate-500 {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .dropdown-menu a:hover,
+html.skilltrust-light .dropdown-menu a:hover {
+    background: rgba(99, 102, 241, 0.06) !important;
+    color: #4f46e5 !important;
+}
+
+html[data-theme="light"] .dropdown-menu .border-slate-700\/50,
+html.skilltrust-light .dropdown-menu .border-slate-700\/50 {
+    border-color: rgba(99, 102, 241, 0.1) !important;
+}
+
+/* =============================================
+   TOPBAR SEARCH + BUTTONS LIGHT MODE
+   ============================================= */
+html[data-theme="light"] .navbar .bg-slate-800\/60,
+html.skilltrust-light .navbar .bg-slate-800\/60 {
+    background: rgba(241, 245, 249, 0.8) !important;
+    border-color: rgba(99, 102, 241, 0.15) !important;
+}
+
+html[data-theme="light"] .navbar .text-slate-300,
+html[data-theme="light"] .navbar .text-slate-400,
+html.skilltrust-light .navbar .text-slate-300,
+html.skilltrust-light .navbar .text-slate-400 {
+    color: #64748b !important;
+}
+
+html[data-theme="light"] .navbar .hover\:text-white:hover,
+html.skilltrust-light .navbar .hover\:text-white:hover {
+    color: #1e293b !important;
+}
+
+html[data-theme="light"] .navbar .hover\:bg-slate-800:hover,
+html.skilltrust-light .navbar .hover\:bg-slate-800:hover {
+    background: rgba(99, 102, 241, 0.08) !important;
+}
+
+html[data-theme="light"] .navbar .border-slate-700\/70,
+html.skilltrust-light .navbar .border-slate-700\/70 {
+    border-color: rgba(99, 102, 241, 0.2) !important;
+}
