@@ -40,7 +40,7 @@ $specCvPath       = isset($user['specialization_cv']) && $user['specialization_c
     ? (string) $user['specialization_cv'] : '';
 
 $stats = ['total_tests' => 0, 'avg_score' => 0.0, 'best_score' => 0.0];
-$statsStmt = $conn->prepare('SELECT COUNT(*) AS total_tests, AVG(percentage) AS avg_score, MAX(percentage) AS best_score FROM results WHERE user_id = ?');
+$statsStmt = $conn->prepare('SELECT COUNT(*) AS total_tests, AVG(score) AS avg_score, MAX(score) AS best_score FROM results WHERE user_id = ?');
 if ($statsStmt) {
     $statsStmt->bind_param('i', $userId);
     $statsStmt->execute();
@@ -55,7 +55,7 @@ if ($statsStmt) {
 
 $skill_performance = [];
 $perfStmt = $conn->prepare(
-    'SELECT t.category AS cat_name, AVG(r.percentage) AS pct FROM results r INNER JOIN tests t ON t.id = r.test_id WHERE r.user_id = ? GROUP BY t.category'
+    'SELECT t.category AS cat_name, AVG(r.score) AS pct FROM results r INNER JOIN tests t ON t.id = r.test_id WHERE r.user_id = ? GROUP BY t.category'
 );
 if ($perfStmt) {
     $perfStmt->bind_param('i', $userId);
