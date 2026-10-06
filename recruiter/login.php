@@ -98,7 +98,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link rel="stylesheet" href="../assets/css/theme-overrides.css">
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100" style="font-family:Inter,sans-serif;">
-    <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.16),_transparent_25%)] px-4 py-10">
+    <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.16),_transparent_25%)] px-4 pb-10">
+        <header class="sticky top-0 z-40 -mx-4 mb-8 border-b border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl">
+            <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4 py-4" aria-label="Main navigation">
+                <a href="../index.php" class="flex shrink-0 items-center gap-3" aria-label="SkillTrust home">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-emerald-400 font-extrabold text-white">ST</span>
+                    <span><span class="block text-sm font-extrabold tracking-wide text-white">SkillTrust</span><span class="hidden text-xs text-slate-400 sm:block">Recruiter Hiring Panel</span></span>
+                </a>
+                <div class="flex items-center gap-2 sm:gap-3">
+                    <a href="../index.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white">Home</a>
+                    <a href="login.php" aria-current="page" class="rounded-xl px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10">Login</a>
+                    <a href="register.php" class="rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-500">Sign up</a>
+                </div>
+            </nav>
+        </header>
         <div class="mx-auto grid max-w-6xl gap-8 lg:grid-cols-2">
             <section class="hidden rounded-[32px] border border-white/10 bg-white/5 p-10 lg:block">
                 <span class="inline-flex rounded-full border border-emerald-400/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-200">Recruiter access</span>
