@@ -128,7 +128,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="../assets/js/theme.js"></script>
     <link rel="stylesheet" href="../assets/css/theme-overrides.css">
-</head>
+<style>
+.signin-btn{display:flex!important;width:100%!important;align-items:center!important;justify-content:center!important;gap:.5rem!important;padding:1rem 1.25rem!important;border-radius:1rem!important;border:0!important;background:#2563eb!important;background-image:linear-gradient(90deg,#1d4ed8,#2563eb,#10b981)!important;color:#fff!important;font-size:1rem!important;font-weight:700!important;box-shadow:0 12px 30px rgba(37,99,235,.3)!important;cursor:pointer!important}
+.signin-btn:hover{background:#1d4ed8!important;background-image:linear-gradient(90deg,#1e40af,#1d4ed8,#059669)!important;transform:translateY(-1px)!important}
+</style></head>
 <body class="min-h-screen bg-slate-100 font-sans text-slate-900 transition-colors dark:bg-slate-950 dark:text-slate-100">
     <div class="relative isolate min-h-screen overflow-hidden">
         <div class="absolute inset-0 -z-20 bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.16),_transparent_34%),radial-gradient(circle_at_bottom_right,_rgba(14,165,233,0.16),_transparent_32%),linear-gradient(180deg,_rgba(255,255,255,1),_rgba(241,245,249,1))] dark:bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.12),_transparent_25%),linear-gradient(180deg,_rgba(2,6,23,1),_rgba(15,23,42,1))]"></div>
@@ -213,7 +216,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                 <label for="password" class="mb-2 block text-sm font-medium text-slate-700 dark:text-slate-200">Password</label>
                                 <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Enter your password" class="w-full rounded-2xl border border-slate-200 bg-white/90 px-4 py-3.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10 dark:border-slate-700 dark:bg-slate-950/60 dark:text-white dark:placeholder:text-slate-500">
                             </div>
-                            <button type="submit" class="group inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-brand-600 via-blue-600 to-emerald-500 px-5 py-4 text-base font-bold text-white shadow-lg shadow-brand-500/25 transition-all duration-200 hover:-translate-y-0.5 hover:from-brand-700 hover:via-blue-700 hover:to-emerald-600 hover:shadow-xl hover:shadow-brand-500/30 focus:outline-none focus:ring-4 focus:ring-brand-500/25 active:translate-y-0"><i data-lucide="log-in" class="h-5 w-5 transition-transform group-hover:translate-x-0.5"></i><span>Sign In</span></button>
+                            <button type="submit" class="signin-btn"><i data-lucide="log-in" class="h-5 w-5"></i><span>Sign In</span></button>
                         </form>
                         <p class="mt-6 text-center text-sm text-slate-600 dark:text-slate-300">Need a recruiter account? <a href="register.php" class="font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-300 dark:hover:text-brand-200">Create account</a></p>
                     </section>
