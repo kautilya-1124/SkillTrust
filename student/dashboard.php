@@ -1,5 +1,5 @@
-// Current Aiven results schema uses `score`; dashboard queries must not use a `percentage` column.
 <?php
+// Current Aiven results schema uses `score`; dashboard queries must not use a `percentage` column.
 declare(strict_types=1);
 
 session_start();
