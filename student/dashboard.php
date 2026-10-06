@@ -68,7 +68,7 @@ $firstName = (string) ($parts[0] ?? $userName);
 // ----- Results aggregates (trust = AVG percentage), consistency helper -----
 $rowStats = ['total_tests' => 0, 'avg_pct' => null, 'std_pct' => null];
 $sStmt    = $conn->prepare(
-    'SELECT COUNT(*) AS total_tests, AVG(percentage) AS avg_pct, STDDEV_SAMP(percentage) AS std_pct
+    'SELECT COUNT(*) AS total_tests, AVG(score) AS avg_pct, STDDEV_SAMP(score) AS std_pct
      FROM results WHERE user_id = ?'
 );
 if ($sStmt) {
@@ -117,7 +117,7 @@ if ($total_tests > 0 && $rowStats['avg_pct'] !== null) {
     $rkStmt = $conn->prepare(
         'SELECT COUNT(*) + 1 AS rk FROM (
             SELECT user_id FROM results GROUP BY user_id
-            HAVING AVG(percentage) > (SELECT AVG(percentage) FROM results WHERE user_id = ?)
+            HAVING AVG(score) > (SELECT AVG(score) FROM results WHERE user_id = ?)
         ) t'
     );
     if ($rkStmt) {
@@ -177,7 +177,7 @@ if ($distinctDates !== []) {
 // ----- Recent activity (last 5): title, %, pass/fail, time ago -----
 $activities = null;
 $aStmt      = $conn->prepare(
-    'SELECT t.title AS title, r.percentage, r.created_at,
+    'SELECT t.title AS title, r.score, r.created_at,
             COALESCE(t.passing_score, 60) AS passing_score
      FROM results r
      INNER JOIN tests t ON t.id = r.test_id
@@ -282,7 +282,7 @@ if ($interviewScheduleColumn !== '') {
 // ----- Weekly chart: last 7 calendar days, avg % per day (0 if none) -----
 $dayScores = [];
 $wStmt     = $conn->prepare(
-    'SELECT DATE(created_at) AS d, AVG(percentage) AS sc
+    'SELECT DATE(created_at) AS d, AVG(score) AS sc
      FROM results
      WHERE user_id = ? AND DATE(created_at) >= DATE_SUB(CURDATE(), INTERVAL 6 DAY)
      GROUP BY DATE(created_at)'
@@ -795,7 +795,7 @@ echo htmlspecialchars($_greeting, ENT_QUOTES, 'UTF-8') . ', ' . htmlspecialchars
         <?php
         if ($activities && $activities->num_rows > 0):
             while ($row = $activities->fetch_assoc()):
-                $score         = (int) ($row['percentage'] ?? 0);
+                $score         = (int) ($row['score'] ?? 0);
                 $passing_score = (int) ($row['passing_score'] ?? 60);
                 $passed        = $score >= $passing_score;
                 $status        = $passed ? 'Passed' : 'Failed';
