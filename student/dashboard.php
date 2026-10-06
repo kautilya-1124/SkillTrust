@@ -196,7 +196,7 @@ if ($aStmt) {
 // ----- Upcoming tests: not yet attempted, limit 3 -----
 $upcoming_tests = [];
 $upStmt         = $conn->prepare(
-    'SELECT t.title, t.difficulty, t.duration
+    'SELECT t.title
      FROM tests t
      WHERE NOT EXISTS (
          SELECT 1 FROM results r WHERE r.test_id = t.id AND r.user_id = ?
@@ -213,7 +213,7 @@ if ($upStmt) {
         $durLabel  = $dur > 0 ? $dur . ' min' : '-';
         $upcoming_tests[] = [
             'title'      => (string) ($ur['title'] ?? 'Test'),
-            'difficulty' => (string) ($ur['difficulty'] ?? 'Beginner'),
+            'difficulty' => 'Beginner',
             'duration'   => $durLabel,
         ];
     }
