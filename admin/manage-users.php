@@ -15,16 +15,26 @@ $pageTitle = 'Manage Students';
 $toastType = (string) ($_GET['toast_type'] ?? '');
 $toastMsg = (string) ($_GET['toast_msg'] ?? '');
 
+// The current SkillTrust `users` table may not have a status column.
+// Detect it once and keep this page compatible with both schemas.
+$hasStatusColumn = false;
+$statusCheck = $conn->query("SELECT COUNT(*) AS c FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = 'users' AND COLUMN_NAME = 'status'");
+if ($statusCheck) {
+    $statusRow = $statusCheck->fetch_assoc();
+    $hasStatusColumn = ((int) ($statusRow['c'] ?? 0)) > 0;
+    $statusCheck->free();
+}
+
 // Student counts from `users` table (full table â€” not affected by search/filter on the list below)
 $countAllUsers = 0;
 $countActiveUsers = 0;
 $countBlockedUsers = 0;
+$statsStatusSql = $hasStatusColumn
+    ? "COALESCE(SUM(CASE WHEN LOWER(TRIM(COALESCE(status, ''))) = 'blocked' THEN 1 ELSE 0 END), 0) AS total_blocked,
+       COALESCE(SUM(CASE WHEN LOWER(TRIM(COALESCE(status, ''))) <> 'blocked' THEN 1 ELSE 0 END), 0) AS total_active"
+    : "0 AS total_blocked, COUNT(*) AS total_active";
 $resStats = $conn->query(
-    'SELECT
-        COUNT(*) AS total_all,
-        COALESCE(SUM(CASE WHEN LOWER(TRIM(COALESCE(status, \'\'))) = \'blocked\' THEN 1 ELSE 0 END), 0) AS total_blocked,
-        COALESCE(SUM(CASE WHEN LOWER(TRIM(COALESCE(status, \'\'))) <> \'blocked\' THEN 1 ELSE 0 END), 0) AS total_active
-     FROM users'
+    "SELECT COUNT(*) AS total_all, {$statsStatusSql} FROM users"
 );
 if ($resStats) {
     $rowS = $resStats->fetch_assoc();
@@ -52,10 +62,10 @@ if ($q !== '') {
     $params[] = $like;
     $params[] = $like;
 }
-if ($statusFilter === 'active') {
+if ($hasStatusColumn && $statusFilter === 'active') {
     $where[] = "LOWER(TRIM(COALESCE(u.status,'active'))) != 'blocked'";
 }
-if ($statusFilter === 'blocked') {
+if ($hasStatusColumn && $statusFilter === 'blocked') {
     $where[] = "LOWER(TRIM(COALESCE(u.status,'active'))) = 'blocked'";
 }
 $whereSql = $where !== [] ? (' WHERE ' . implode(' AND ', $where)) : '';
