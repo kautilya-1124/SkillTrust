@@ -89,6 +89,13 @@ require_once __DIR__ . '/../includes/functions.php';
     </style>
     <script src="../assets/js/theme.js"></script>
     <link rel="stylesheet" href="../assets/css/theme-overrides.css">
+<style>
+.student-auth-nav{display:flex!important;align-items:center!important;gap:.5rem!important;visibility:visible!important;opacity:1!important}
+.student-auth-nav a{display:inline-flex!important;align-items:center!important;justify-content:center!important;visibility:visible!important;opacity:1!important;white-space:nowrap!important;text-decoration:none!important}
+.student-auth-nav .nav-signin{color:#e2e8f0!important;background:rgba(255,255,255,.04)!important;border:1px solid rgba(255,255,255,.16)!important}
+.student-auth-nav .nav-signup{color:#fff!important;background:#4f46e5!important;border:1px solid #6366f1!important;box-shadow:0 8px 22px rgba(79,70,229,.3)!important}
+.student-auth-nav .nav-signup:hover{background:#4338ca!important}
+</style>
 </head>
 <body class="text-slate-300 min-h-screen overflow-x-hidden">\n\n<header class="sticky top-0 z-40 border-b border-white/10 bg-slate-950/65 backdrop-blur-xl">
     <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
@@ -99,10 +106,10 @@ require_once __DIR__ . '/../includes/functions.php';
                 <span class="block text-[11px] text-brand-300">Student Access</span>
             </span>
         </a>
-        <nav class="flex items-center gap-2 sm:gap-3">
+        <nav class="student-auth-nav flex items-center gap-2 sm:gap-3">
             <a href="../index.php" class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-brand-400/40 hover:bg-white/5 sm:text-sm">Home</a>
-            <a href="login.php" class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-brand-400/40 hover:bg-white/5 sm:text-sm">Sign In</a>
-            <a href="register.php" aria-current="page" class="rounded-full border border-brand-400/35 bg-brand-500/10 px-4 py-2 text-xs font-semibold text-brand-200 transition hover:bg-brand-500/20 sm:text-sm">Sign Up</a>
+            <a href="login.php" class="nav-signin rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-brand-400/40 hover:bg-white/5 sm:text-sm">Sign In</a>
+            <a href="register.php" aria-current="page" class="nav-signup rounded-full border border-brand-400/35 bg-brand-500/10 px-4 py-2 text-xs font-semibold text-brand-200 transition hover:bg-brand-500/20 sm:text-sm">Sign Up</a>
         </nav>
     </div>
 </header>
