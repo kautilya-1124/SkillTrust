@@ -1,6 +1,9 @@
 <?php
 declare(strict_types=1);
 
+// Schema-compatible status handling for deployed Aiven users table.
+
+
 require_once __DIR__ . '/includes/auth.php';
 
 
