@@ -465,11 +465,20 @@ if ($results === []) {
             <!-- Quick stats -->
             <section class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <?php
-                $mini = [
-                    ['label' => 'Highest score', 'value' => max(array_column($results, 'score')) . '%', 'sub' => 'Best single attempt', 'grad' => 'from-emerald-500/20 to-teal-900/20', 'ic' => 'text-emerald-400', 'delay' => 'stagger-2'],
-                    ['label' => 'Lowest score', 'value' => min(array_column($results, 'score')) . '%', 'sub' => 'Focus area', 'grad' => 'from-amber-500/20 to-orange-900/20', 'ic' => 'text-amber-400', 'delay' => 'stagger-3'],
-                    ['label' => 'Total time', 'value' => array_sum(array_column($results, 'duration_min')) . ' min', 'sub' => 'Time on recorded tests', 'grad' => 'from-brand-500/20 to-violet-900/20', 'ic' => 'text-brand-400', 'delay' => 'stagger-4'],
-                ];
+                if ($results === []) {
+                    $mini = [
+                        ['label' => 'Highest score', 'value' => '-', 'sub' => 'Best single attempt', 'grad' => 'from-emerald-500/20 to-teal-900/20', 'ic' => 'text-emerald-400', 'delay' => 'stagger-2'],
+                        ['label' => 'Lowest score', 'value' => '-', 'sub' => 'Focus area', 'grad' => 'from-amber-500/20 to-orange-900/20', 'ic' => 'text-amber-400', 'delay' => 'stagger-3'],
+                        ['label' => 'Total time', 'value' => '0 min', 'sub' => 'Time on recorded tests', 'grad' => 'from-brand-500/20 to-violet-900/20', 'ic' => 'text-brand-400', 'delay' => 'stagger-4'],
+                    ];
+                } else {
+                    $scoreCol = array_column($results, 'score');
+                    $mini = [
+                        ['label' => 'Highest score', 'value' => max($scoreCol) . '%', 'sub' => 'Best single attempt', 'grad' => 'from-emerald-500/20 to-teal-900/20', 'ic' => 'text-emerald-400', 'delay' => 'stagger-2'],
+                        ['label' => 'Lowest score', 'value' => min($scoreCol) . '%', 'sub' => 'Focus area', 'grad' => 'from-amber-500/20 to-orange-900/20', 'ic' => 'text-amber-400', 'delay' => 'stagger-3'],
+                        ['label' => 'Total time', 'value' => array_sum(array_column($results, 'duration_min')) . ' min', 'sub' => 'Time on recorded tests', 'grad' => 'from-brand-500/20 to-violet-900/20', 'ic' => 'text-brand-400', 'delay' => 'stagger-4'],
+                    ];
+                }
                 foreach ($mini as $m): ?>
                     <div class="glass-card opacity-0-start animate-fade-up <?php echo $m['delay']; ?> rounded-2xl p-5 bg-gradient-to-br <?php echo $m['grad']; ?>
                                 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5 transition-all duration-300">
