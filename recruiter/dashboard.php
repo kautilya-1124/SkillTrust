@@ -61,8 +61,8 @@ if ($schemaReady) {
     $queries = [
         'jobs' => 'SELECT COUNT(*) total_jobs, SUM(CASE WHEN expiry_date >= CURDATE() THEN 1 ELSE 0 END) active_jobs, SUM(CASE WHEN expiry_date < CURDATE() THEN 1 ELSE 0 END) expired_jobs FROM jobs WHERE recruiter_id = ?',
         'apps' => $hasAverageSnapshotColumn
-            ? 'SELECT COUNT(a.id) total_applicants, SUM(CASE WHEN a.status = "selected" THEN 1 ELSE 0 END) selected, AVG(COALESCE((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id), a.average_score_snapshot)) avg_score FROM applications a INNER JOIN jobs j ON j.id = a.job_id WHERE j.recruiter_id = ?'
-            : 'SELECT COUNT(a.id) total_applicants, SUM(CASE WHEN a.status = "selected" THEN 1 ELSE 0 END) selected, AVG((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id)) avg_score FROM applications a INNER JOIN jobs j ON j.id = a.job_id WHERE j.recruiter_id = ?',
+            ? 'SELECT COUNT(a.id) total_applicants, SUM(CASE WHEN a.status = 'selected' THEN 1 ELSE 0 END) selected, AVG(COALESCE((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id), a.average_score_snapshot)) avg_score FROM applications a INNER JOIN jobs j ON j.id = a.job_id WHERE j.recruiter_id = ?'
+            : 'SELECT COUNT(a.id) total_applicants, SUM(CASE WHEN a.status = 'selected' THEN 1 ELSE 0 END) selected, AVG((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id)) avg_score FROM applications a INNER JOIN jobs j ON j.id = a.job_id WHERE j.recruiter_id = ?',
     ];
     foreach ($queries as $key => $sql) {
         $stmt = $conn->prepare($sql);
@@ -90,7 +90,7 @@ if ($schemaReady) {
              FROM interviews i
              INNER JOIN applications a ON a.id = i.application_id
              INNER JOIN jobs j ON j.id = a.job_id
-             WHERE j.recruiter_id = ? AND i.status = "scheduled" AND i.' . $interviewDateColumn . ' >= NOW()'
+             WHERE j.recruiter_id = ? AND i.status = 'scheduled' AND i.' . $interviewDateColumn . ' >= NOW()'
         ) : false;
         if ($stmt) {
             $stmt->bind_param('i', $recruiterId);
