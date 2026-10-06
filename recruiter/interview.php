@@ -159,7 +159,7 @@ if ($schemaReady) {
          INNER JOIN jobs j ON j.id = a.job_id
          INNER JOIN users u ON u.id = a.user_id
          WHERE j.recruiter_id = ?
-           AND a.status IN ("shortlisted", "selected", "applied")
+           AND a.status IN (\'shortlisted\', \'selected\', \'applied\')
          ORDER BY a.applied_at DESC'
     );
     if ($scheduleApplicationsStmt) {
@@ -172,10 +172,10 @@ if ($schemaReady) {
     $summaryStmt = $interviewDateColumn !== '' ? $conn->prepare(
         'SELECT
             COUNT(i.id) AS total,
-            SUM(CASE WHEN i.status = "scheduled" THEN 1 ELSE 0 END) AS scheduled,
-            SUM(CASE WHEN i.status = "completed" THEN 1 ELSE 0 END) AS completed,
-            SUM(CASE WHEN i.status = "cancelled" THEN 1 ELSE 0 END) AS cancelled,
-            SUM(CASE WHEN i.status = "scheduled" AND i.' . $interviewDateColumn . ' >= NOW() THEN 1 ELSE 0 END) AS upcoming
+            SUM(CASE WHEN i.status = \'scheduled\' THEN 1 ELSE 0 END) AS scheduled,
+            SUM(CASE WHEN i.status = \'completed\' THEN 1 ELSE 0 END) AS completed,
+            SUM(CASE WHEN i.status = \'cancelled\' THEN 1 ELSE 0 END) AS cancelled,
+            SUM(CASE WHEN i.status = \'scheduled\' AND i.' . $interviewDateColumn . ' >= NOW() THEN 1 ELSE 0 END) AS upcoming
          FROM interviews i
          INNER JOIN applications a ON a.id = i.application_id
          INNER JOIN jobs j ON j.id = a.job_id
@@ -309,15 +309,15 @@ $listSql = '
         a.status AS application_status,
         j.id AS job_id,
         j.title AS job_title,
-        COALESCE(NULLIF(u.name, ""), CONCAT("Candidate #", a.user_id)) AS candidate_name,
-        COALESCE(NULLIF(u.email, ""), "No email available") AS candidate_email
+        COALESCE(NULLIF(u.name, \'\'), CONCAT(\'Candidate #\', a.user_id)) AS candidate_name,
+        COALESCE(NULLIF(u.email, \'\'), \'No email available\') AS candidate_email
     FROM interviews i
     JOIN applications a ON i.application_id = a.id
     JOIN jobs j ON a.job_id = j.id
     LEFT JOIN users u ON a.user_id = u.id
     WHERE j.recruiter_id = ?' . $jobFilterSql . $statusFilterSql . $searchFilterSql . '
     ORDER BY
-        CASE WHEN i.status = "scheduled" AND i.' . $interviewDateColumn . ' >= NOW() THEN 0 ELSE 1 END,
+        CASE WHEN i.status = \'scheduled\' AND i.' . $interviewDateColumn . ' >= NOW() THEN 0 ELSE 1 END,
         i.' . $interviewDateColumn . ' ASC
     LIMIT ? OFFSET ?';
 
