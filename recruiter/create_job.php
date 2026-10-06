@@ -154,36 +154,35 @@ if ($schemaReady) {
     }
 
     if ($supportsMultipleRequiredTests) {
-        $recentStmt = $conn->prepare(
-            sprintf(
-                'SELECT
-                    j.id,
-                    j.title,
-                    j.%1$s AS min_average_score,
-                    j.expiry_date,
-                    j.created_at,
-                    (
-                        SELECT COUNT(*)
-                        FROM job_required_tests jrt
-                        WHERE jrt.job_id = j.id
-                    ) AS required_tests_count,
-                    (
-                        SELECT GROUP_CONCAT(
-                            CONCAT(t.title, " >= ", FORMAT(jrt.min_score, 2))
-                            ORDER BY t.title
-                            SEPARATOR " | "
-                        )
-                        FROM job_required_tests jrt
-                        INNER JOIN tests t ON t.id = jrt.test_id
-                        WHERE jrt.job_id = j.id
-                    ) AS required_tests_summary
-                 FROM jobs j
-                 WHERE j.recruiter_id = ?
-                 ORDER BY j.created_at DESC
-                 LIMIT 3',
-                $jobMinAverageColumn
-            )
+        $recentSql = sprintf(
+            "SELECT
+                j.id,
+                j.title,
+                j.%1\$s AS min_average_score,
+                j.expiry_date,
+                j.created_at,
+                (
+                    SELECT COUNT(*)
+                    FROM job_required_tests jrt
+                    WHERE jrt.job_id = j.id
+                ) AS required_tests_count,
+                (
+                    SELECT GROUP_CONCAT(
+                        CONCAT(t.title, ' >= ', FORMAT(jrt.min_score, 2))
+                        ORDER BY t.title
+                        SEPARATOR ' | '
+                    )
+                    FROM job_required_tests jrt
+                    INNER JOIN tests t ON t.id = jrt.test_id
+                    WHERE jrt.job_id = j.id
+                ) AS required_tests_summary
+             FROM jobs j
+             WHERE j.recruiter_id = ?
+             ORDER BY j.created_at DESC
+             LIMIT 3",
+            $jobMinAverageColumn
         );
+        $recentStmt = $conn->prepare($recentSql);
     } elseif ($legacyJobTestColumns) {
         $recentStmt = $conn->prepare(
             sprintf(
