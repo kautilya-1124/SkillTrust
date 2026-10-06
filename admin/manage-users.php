@@ -105,7 +105,7 @@ $attemptsSelect = $hasResultsTable
     ? '(SELECT COUNT(*) FROM results r WHERE r.user_id = u.id) AS attempts_count'
     : '0 AS attempts_count';
 $listSql = '
-    SELECT u.id, u.name, u.email, u.status, ' . $attemptsSelect . '
+    SELECT u.id, u.name, u.email, ' . ($hasStatusColumn ? 'u.status' : "'active' AS status") . ', ' . $attemptsSelect . '
     FROM users u
 ' . $whereSql . '
     ORDER BY u.id DESC
