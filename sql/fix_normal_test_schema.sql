@@ -1,5 +1,6 @@
 -- SkillTrust normal test schema fix
 -- Run this once in Aiven DBeaver against database: defaultdb
+-- Compatible with MySQL versions that reject ALTER TABLE ... ADD COLUMN IF NOT EXISTS.
 
 CREATE TABLE IF NOT EXISTS questions (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -19,8 +20,62 @@ CREATE TABLE IF NOT EXISTS questions (
       FOREIGN KEY (test_id) REFERENCES tests(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-ALTER TABLE tests ADD COLUMN IF NOT EXISTS difficulty ENUM('easy','medium','hard') NOT NULL DEFAULT 'easy';
-ALTER TABLE tests ADD COLUMN IF NOT EXISTS duration INT NOT NULL DEFAULT 30;
-ALTER TABLE tests ADD COLUMN IF NOT EXISTS featured TINYINT(1) NOT NULL DEFAULT 0;
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        "ALTER TABLE tests ADD COLUMN difficulty ENUM('easy','medium','hard') NOT NULL DEFAULT 'easy'",
+        'SELECT 1'
+    )
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'tests'
+      AND COLUMN_NAME = 'difficulty'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
 
-ALTER TABLE results ADD COLUMN IF NOT EXISTS percentage DECIMAL(5,2) NOT NULL DEFAULT 0;
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        "ALTER TABLE tests ADD COLUMN duration INT NOT NULL DEFAULT 30",
+        'SELECT 1'
+    )
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'tests'
+      AND COLUMN_NAME = 'duration'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        "ALTER TABLE tests ADD COLUMN featured TINYINT(1) NOT NULL DEFAULT 0",
+        'SELECT 1'
+    )
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'tests'
+      AND COLUMN_NAME = 'featured'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
+
+SET @sql = (
+    SELECT IF(
+        COUNT(*) = 0,
+        "ALTER TABLE results ADD COLUMN percentage DECIMAL(5,2) NOT NULL DEFAULT 0",
+        'SELECT 1'
+    )
+    FROM information_schema.COLUMNS
+    WHERE TABLE_SCHEMA = DATABASE()
+      AND TABLE_NAME = 'results'
+      AND COLUMN_NAME = 'percentage'
+);
+PREPARE stmt FROM @sql;
+EXECUTE stmt;
+DEALLOCATE PREPARE stmt;
