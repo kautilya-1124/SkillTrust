@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
             var fd = new FormData();
             fd.append('resume', f);
             fd.append('resume_type', type);
-            fetch('upload_resume.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+            fetch('actions/upload_resume.php', { method: 'POST', body: fd, credentials: 'same-origin' })
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (!data || !data.ok) {
@@ -339,7 +339,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (!type || !window.confirm('Remove this resume?')) return;
             var fd = new FormData();
             fd.append('resume_type', type);
-            fetch('delete_resume.php', { method: 'POST', body: fd, credentials: 'same-origin' })
+            fetch('actions/delete_resume.php', { method: 'POST', body: fd, credentials: 'same-origin' })
                 .then(function (r) { return r.json(); })
                 .then(function (data) {
                     if (!data || !data.ok) {
