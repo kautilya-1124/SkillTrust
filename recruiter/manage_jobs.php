@@ -199,10 +199,10 @@ $selectColumns = [
     'j.created_at',
     sprintf('j.%s AS updated_at', $jobUpdatedAtColumn),
     '(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id) AS applicant_count',
-    '(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'applied') AS applied_count',
-    '(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'shortlisted') AS shortlisted_count',
-    '(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'rejected') AS rejected_count',
-    '(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'selected') AS selected_count',
+    "(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'applied') AS applied_count",
+    "(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'shortlisted') AS shortlisted_count",
+    "(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'rejected') AS rejected_count",
+    "(SELECT COUNT(*) FROM applications a WHERE a.job_id = j.id AND a.status = 'selected') AS selected_count",
     $hasAverageSnapshotColumn
         ? '(SELECT ROUND(AVG(a.average_score_snapshot), 2) FROM applications a WHERE a.job_id = j.id) AS avg_applicant_score'
         : '(SELECT ROUND(AVG((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id)), 2) FROM applications a WHERE a.job_id = j.id) AS avg_applicant_score',
