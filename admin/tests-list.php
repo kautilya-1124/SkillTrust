@@ -20,15 +20,35 @@ $page = max(1, (int) ($_GET['page'] ?? 1));
 $perPage = 10;
 $offset = ($page - 1) * $perPage;
 
+function tests_list_has_column(mysqli $conn, string $table, string $column): bool
+{
+    $tableSafe = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $columnSafe = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
+    if ($tableSafe === '' || $columnSafe === '') return false;
+    $result = $conn->query("SHOW COLUMNS FROM {$tableSafe} LIKE '{$columnSafe}'");
+    if (!$result) return false;
+    $exists = $result->num_rows > 0;
+    $result->free();
+    return $exists;
+}
+
+$hasDifficulty = tests_list_has_column($conn, 'tests', 'difficulty');
+$hasDuration = tests_list_has_column($conn, 'tests', 'duration');
+$hasFeatured = tests_list_has_column($conn, 'tests', 'featured');
+$hasCategory = tests_list_has_column($conn, 'tests', 'category');
+$hasPassingScore = tests_list_has_column($conn, 'tests', 'passing_score');
+$hasStart = tests_list_has_column($conn, 'tests', 'start_datetime');
+$hasExpiry = tests_list_has_column($conn, 'tests', 'expiry_datetime');
+
 $where = [];
 $types = '';
 $params = [];
 if ($q !== '') {
-    $where[] = '(t.title LIKE ?)';
+    $where[] = 't.title LIKE ?';
     $types .= 's';
     $params[] = '%' . $q . '%';
 }
-if ($difficultyFilter !== 'all') {
+if ($difficultyFilter !== 'all' && $hasDifficulty) {
     $where[] = 'LOWER(t.difficulty) = ?';
     $types .= 's';
     $params[] = $difficultyFilter;
@@ -52,12 +72,22 @@ $totalPages = max(1, (int) ceil($totalRows / $perPage));
 if ($page > $totalPages) { $page = $totalPages; $offset = ($page - 1) * $perPage; }
 
 $tests = [];
-$sql = '
-    SELECT t.id, t.title, t.duration, t.difficulty, t.featured, t.category, t.passing_score
+$durationColumn = $hasDuration ? 't.duration' : '0';
+$difficultyColumn = $hasDifficulty ? "COALESCE(t.difficulty, 'medium')" : "'medium'";
+$featuredColumn = $hasFeatured ? 't.featured' : '0';
+$categoryColumn = $hasCategory ? "COALESCE(t.category, '')" : "''";
+$passingScoreColumn = $hasPassingScore ? 't.passing_score' : '0';
+
+$sql = "
+    SELECT t.id, t.title, {$durationColumn} AS duration,
+           {$difficultyColumn} AS difficulty,
+           {$featuredColumn} AS featured,
+           {$categoryColumn} AS category,
+           {$passingScoreColumn} AS passing_score
     FROM tests t
-' . $whereSql . '
+" . $whereSql . "
     ORDER BY t.id DESC
-    LIMIT ? OFFSET ?';
+    LIMIT ? OFFSET ?";
 $listStmt = $conn->prepare($sql);
 if ($listStmt) {
     $listTypes = $types . 'ii';
@@ -83,12 +113,14 @@ if ($listStmt) {
     $listStmt->close();
 }
 
-$hasSchedule = has_column($conn, 'tests', 'start_datetime') && has_column($conn, 'tests', 'expiry_datetime');
+$hasSchedule = $hasStart && $hasExpiry;
 $runningTests = [];
 $expiredTests = [];
 if ($hasSchedule) {
+    $durationSelect = $hasDuration ? ', duration' : ', 0 AS duration';
+    $categorySelect = $hasCategory ? ', category' : ", '' AS category";
     $runningRes = $conn->query(
-        'SELECT id, title, category, duration FROM tests
+        'SELECT id, title' . $categorySelect . $durationSelect . ' FROM tests
          WHERE start_datetime <= NOW() AND expiry_datetime >= NOW()
          ORDER BY id DESC LIMIT 8'
     );
@@ -97,7 +129,7 @@ if ($hasSchedule) {
         $runningRes->free();
     }
     $expiredRes = $conn->query(
-        'SELECT id, title, category, duration FROM tests
+        'SELECT id, title' . $categorySelect . $durationSelect . ' FROM tests
          WHERE expiry_datetime < NOW()
          ORDER BY id DESC LIMIT 8'
     );
@@ -111,8 +143,15 @@ if ($hasSchedule) {
 
 $viewTest = null;
 if ($viewId > 0) {
+    $startSelect = $hasStart ? ', start_datetime' : ', NULL AS start_datetime';
+    $expirySelect = $hasExpiry ? ', expiry_datetime' : ', NULL AS expiry_datetime';
     $vStmt = $conn->prepare(
-        'SELECT id, title, duration, difficulty, featured, category, passing_score, start_datetime, expiry_datetime
+        'SELECT id, title, ' . $durationColumn . ' AS duration, ' .
+        $difficultyColumn . ' AS difficulty, ' .
+        $featuredColumn . ' AS featured, ' .
+        $categoryColumn . ' AS category, ' .
+        $passingScoreColumn . ' AS passing_score' .
+        $startSelect . $expirySelect . '
          FROM tests
          WHERE id = ?
          LIMIT 1'
@@ -122,9 +161,7 @@ if ($viewId > 0) {
         $vStmt->execute();
         $row = $vStmt->get_result()->fetch_assoc();
         $vStmt->close();
-        if ($row) {
-            $viewTest = $row;
-        }
+        if ($row) $viewTest = $row;
     }
 }
 
