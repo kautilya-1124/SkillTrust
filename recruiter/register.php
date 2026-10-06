@@ -557,16 +557,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 var phonePattern = /^[0-9+\-\s()]{7,20}$/;
                 var strongPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
 
-                if (
-                    company.length < 2 ||
-                    recruiter.length < 2 ||
-                    !phonePattern.test(phone) ||
-                    !emailPattern.test(email) ||
-                    !strongPassword.test(password) ||
-                    password !== confirmPassword
-                ) {
+                var errorMessage = '';
+                var errorField = null;
+
+                if (company.length < 2) {
+                    errorMessage = 'Company name is required (minimum 2 characters).';
+                    errorField = document.getElementById('company_name');
+                } else if (recruiter.length < 2) {
+                    errorMessage = 'Recruiter name is required (minimum 2 characters).';
+                    errorField = document.getElementById('recruiter_name');
+                } else if (!phonePattern.test(phone)) {
+                    errorMessage = 'Please enter a valid phone number, for example +91 98765 43210.';
+                    errorField = document.getElementById('phone');
+                } else if (!emailPattern.test(email)) {
+                    errorMessage = 'Please enter a valid business email address.';
+                    errorField = document.getElementById('email');
+                } else if (!strongPassword.test(password)) {
+                    errorMessage = 'Password must be 8+ characters and include uppercase, lowercase, and a number.';
+                    errorField = document.getElementById('password');
+                } else if (password !== confirmPassword) {
+                    errorMessage = 'Passwords do not match.';
+                    errorField = document.getElementById('confirm_password');
+                }
+
+                if (errorMessage) {
                     event.preventDefault();
-                    showToast('error', 'Please complete all recruiter details correctly before continuing.');
+                    showToast('error', errorMessage);
+                    if (errorField) {
+                        errorField.focus();
+                    }
                 }
             });
 
