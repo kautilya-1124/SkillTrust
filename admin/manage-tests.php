@@ -27,16 +27,48 @@ $offset = ($page - 1) * $perPage;
 $where = [];
 $types = '';
 $params = [];
+
+/**
+ * Detect optional columns so this page works with the current SkillTrust
+ * tests schema as well as older database variants.
+ */
+function manage_tests_has_column(mysqli $conn, string $table, string $column): bool
+{
+    $tableSafe = preg_replace('/[^a-zA-Z0-9_]/', '', $table);
+    $columnSafe = preg_replace('/[^a-zA-Z0-9_]/', '', $column);
+    if ($tableSafe === '' || $columnSafe === '') {
+        return false;
+    }
+
+    $result = $conn->query("SHOW COLUMNS FROM \`{$tableSafe}\` LIKE '{$columnSafe}'");
+    if (!$result) {
+        return false;
+    }
+
+    $exists = $result->num_rows > 0;
+    $result->free();
+    return $exists;
+}
+
+$hasDifficulty = manage_tests_has_column($conn, 'tests', 'difficulty');
+$hasDuration = manage_tests_has_column($conn, 'tests', 'duration');
+$hasFeatured = manage_tests_has_column($conn, 'tests', 'featured');
+$hasPassingScore = manage_tests_has_column($conn, 'tests', 'passing_score');
+$hasCategory = manage_tests_has_column($conn, 'tests', 'category');
+$hasCreatedAt = manage_tests_has_column($conn, 'tests', 'created_at');
+
 if ($q !== '') {
     $where[] = 't.title LIKE ?';
     $types .= 's';
     $params[] = '%' . $q . '%';
 }
-if ($difficulty !== 'all') {
+
+if ($difficulty !== 'all' && $hasDifficulty) {
     $where[] = 'LOWER(t.difficulty) = ?';
     $types .= 's';
     $params[] = $difficulty;
 }
+
 $whereSql = $where !== [] ? (' WHERE ' . implode(' AND ', $where)) : '';
 $orderSql = $sort === 'oldest' ? ' ORDER BY t.id ASC ' : ' ORDER BY t.id DESC ';
 
@@ -63,20 +95,33 @@ if ($page > $totalPages) {
 }
 
 $tests = [];
-$listSql = '
+
+$durationColumn = $hasDuration ? 't.duration' : '0';
+$difficultyColumn = $hasDifficulty ? "COALESCE(t.difficulty, 'medium')" : "'medium'";
+$featuredColumn = $hasFeatured ? 't.featured' : '0';
+$categoryColumn = $hasCategory ? "COALESCE(t.category, '')" : "''";
+$passingScoreColumn = $hasPassingScore ? 't.passing_score' : '0';
+
+$questionsCountSql = '0';
+if (manage_tests_has_column($conn, 'coding_questions', 'test_id')) {
+    $questionsCountSql = '(SELECT COUNT(*) FROM coding_questions cq WHERE cq.test_id = t.id)';
+}
+
+$listSql = "
     SELECT
         t.id,
         t.title,
-        t.duration,
-        t.difficulty,
-        t.featured,
-        t.category,
-        t.passing_score,
-        (SELECT COUNT(*) FROM questions q WHERE q.test_id = t.id) AS total_questions,
+        {$durationColumn} AS duration,
+        {$difficultyColumn} AS difficulty,
+        {$featuredColumn} AS featured,
+        {$categoryColumn} AS category,
+        {$passingScoreColumn} AS passing_score,
+        {$questionsCountSql} AS total_questions,
         (SELECT COUNT(*) FROM results r WHERE r.test_id = t.id) AS total_attempts
     FROM tests t
-' . $whereSql . $orderSql . '
-    LIMIT ? OFFSET ?';
+" . $whereSql . $orderSql . "
+    LIMIT ? OFFSET ?";
+
 $listStmt = $conn->prepare($listSql);
 if ($listStmt) {
     $listTypes = $types . 'ii';
