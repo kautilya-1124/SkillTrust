@@ -40,7 +40,7 @@ function manage_tests_has_column(mysqli $conn, string $table, string $column): b
         return false;
     }
 
-    $result = $conn->query("SHOW COLUMNS FROM \`{$tableSafe}\` LIKE '{$columnSafe}'");
+    $result = $conn->query("SHOW COLUMNS FROM {$tableSafe} LIKE '{$columnSafe}'");
     if (!$result) {
         return false;
     }
