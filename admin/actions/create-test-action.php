@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/auth.php';
 validate_csrf_or_die();
 
-function normalize_correct_option(string $value): ?string
+function normalize_correct_option(string $value, array $options = []): ?string
 {
     $v = strtolower(trim($value));
     if (in_array($v, ['1', '2', '3', '4'], true)) {
@@ -14,6 +14,13 @@ function normalize_correct_option(string $value): ?string
     if (in_array($v, ['option2', 'option_2', 'b'], true)) { return '2'; }
     if (in_array($v, ['option3', 'option_3', 'c'], true)) { return '3'; }
     if (in_array($v, ['option4', 'option_4', 'd'], true)) { return '4'; }
+
+    // Also accept the actual answer text in correct_option.
+    foreach ($options as $index => $option) {
+        if (strtolower(trim((string) $option)) === $v) {
+            return (string) ($index + 1);
+        }
+    }
     return null;
 }
 
@@ -146,7 +153,7 @@ if ($title === '') {
                 $option2 = trim((string) $row[2]);
                 $option3 = trim((string) $row[3]);
                 $option4 = trim((string) $row[4]);
-                $correctOption = normalize_correct_option((string) $row[5]);
+                $correctOption = normalize_correct_option((string) $row[5], [$option1, $option2, $option3, $option4]);
                 $qDifficulty = strtolower(trim((string) $row[6]));
 
                 if (
