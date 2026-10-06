@@ -97,18 +97,33 @@ if ($questions === []) {
 $formattedQuestions = [];
 foreach ($questions as $row) {
     $qid = (int) ($row['id'] ?? 0);
-    $co  = isset($row['correct_option']) ? (int) $row['correct_option'] : 1;
-    if ($co < 1) {
-        $co = 1;
+
+    // Support both legacy CSV imports (correct_option = 1-4)
+    // and answer-text imports (correct_option = exact option text).
+    $rawCorrect = trim((string) ($row['correct_option'] ?? ''));
+    $optionTextsForCheck = [
+        (string) ($row['option1'] ?? ''),
+        (string) ($row['option2'] ?? ''),
+        (string) ($row['option3'] ?? ''),
+        (string) ($row['option4'] ?? ''),
+    ];
+    $co = 1;
+    if (ctype_digit($rawCorrect) && (int) $rawCorrect >= 1 && (int) $rawCorrect <= 4) {
+        $co = (int) $rawCorrect;
+    } else {
+        foreach ($optionTextsForCheck as $optionNumber => $optionText) {
+            if (trim($optionText) === $rawCorrect) {
+                $co = $optionNumber + 1;
+                break;
+            }
+        }
     }
-    if ($co > 4) {
-        $co = 4;
-    }
+
     $options = [
-        ['text' => (string) ($row['option1'] ?? ''), 'is_correct' => $co === 1],
-        ['text' => (string) ($row['option2'] ?? ''), 'is_correct' => $co === 2],
-        ['text' => (string) ($row['option3'] ?? ''), 'is_correct' => $co === 3],
-        ['text' => (string) ($row['option4'] ?? ''), 'is_correct' => $co === 4],
+        ['text' => $optionTextsForCheck[0], 'is_correct' => $co === 1],
+        ['text' => $optionTextsForCheck[1], 'is_correct' => $co === 2],
+        ['text' => $optionTextsForCheck[2], 'is_correct' => $co === 3],
+        ['text' => $optionTextsForCheck[3], 'is_correct' => $co === 4],
     ];
     skilltrust_shuffle_assoc_list($options);
 
