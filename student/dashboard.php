@@ -249,8 +249,7 @@ if ($interviewScheduleColumn !== '') {
              INNER JOIN applications a ON a.id = i.application_id
              INNER JOIN jobs j ON j.id = a.job_id
              WHERE a.user_id = ?
-               AND i.status = "scheduled"
-               AND i.%s >= NOW()
+               AND %s >= NOW()
              ORDER BY i.%s ASC
              LIMIT 3',
             implode(', ', $selectColumns),
