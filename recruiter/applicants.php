@@ -139,10 +139,10 @@ if ($schemaReady) {
     $statsStmt = $conn->prepare(
         'SELECT
             COUNT(a.id) AS total_applications,
-            SUM(CASE WHEN a.status = "applied" THEN 1 ELSE 0 END) AS applied,
-            SUM(CASE WHEN a.status = "shortlisted" THEN 1 ELSE 0 END) AS shortlisted,
-            SUM(CASE WHEN a.status = "rejected" THEN 1 ELSE 0 END) AS rejected,
-            SUM(CASE WHEN a.status = "selected" THEN 1 ELSE 0 END) AS selected,
+            SUM(CASE WHEN a.status = \'applied\' THEN 1 ELSE 0 END) AS applied,
+            SUM(CASE WHEN a.status = \'shortlisted\' THEN 1 ELSE 0 END) AS shortlisted,
+            SUM(CASE WHEN a.status = \'rejected\' THEN 1 ELSE 0 END) AS rejected,
+            SUM(CASE WHEN a.status = \'selected\' THEN 1 ELSE 0 END) AS selected,
             AVG(' . ($hasAverageSnapshotColumn
                 ? 'COALESCE((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id), a.average_score_snapshot)'
                 : '(SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id)') . ') AS avg_score
@@ -238,8 +238,8 @@ $listSql = '
         ' . ($hasAverageSnapshotColumn ? 'a.average_score_snapshot,' : '0 AS average_score_snapshot,') . '
         j.title AS job_title,
         j.expiry_date,
-        COALESCE(NULLIF(u.name, ""), CONCAT("Candidate #", a.user_id)) AS candidate_name,
-        COALESCE(NULLIF(u.email, ""), "No email available") AS candidate_email,
+        COALESCE(NULLIF(u.name, \'\'), CONCAT(\'Candidate #\', a.user_id)) AS candidate_name,
+        COALESCE(NULLIF(u.email, \'\'), \'No email available\') AS candidate_email,
         ' . ($hasAverageSnapshotColumn
             ? 'COALESCE((SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id), a.average_score_snapshot)'
             : '(SELECT AVG(r.score) FROM results r WHERE r.user_id = a.user_id)') . ' AS average_score,
@@ -247,7 +247,7 @@ $listSql = '
             ? '(SELECT COUNT(*) FROM interviews i WHERE i.application_id = a.id)'
             : '0') . ' AS interview_count,
         ' . ($hasInterviewsTable
-            ? '(SELECT MIN(i.interview_datetime) FROM interviews i WHERE i.application_id = a.id AND i.status = "scheduled")'
+            ? '(SELECT MIN(i.interview_datetime) FROM interviews i WHERE i.application_id = a.id AND i.status = \'scheduled\')'
             : 'NULL') . ' AS next_interview_at
     FROM applications a
     INNER JOIN jobs j ON j.id = a.job_id
