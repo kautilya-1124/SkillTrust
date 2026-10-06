@@ -90,7 +90,24 @@ require_once __DIR__ . '/../includes/functions.php';
     <script src="../assets/js/theme.js"></script>
     <link rel="stylesheet" href="../assets/css/theme-overrides.css">
 </head>
-<body class="text-slate-300 flex items-start sm:items-center justify-center min-h-screen px-4 py-8 sm:py-10 overflow-x-hidden">
+<body class="text-slate-300 min-h-screen overflow-x-hidden">\n\n<header class="sticky top-0 z-40 border-b border-white/10 bg-slate-950/65 backdrop-blur-xl">
+    <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+        <a href="../index.php" class="inline-flex items-center gap-3 text-white">
+            <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-violet-600 shadow-lg shadow-brand-500/30">S</span>
+            <span>
+                <span class="block font-display text-lg font-bold tracking-tight">SkillTrust</span>
+                <span class="block text-[11px] text-brand-300">Student Access</span>
+            </span>
+        </a>
+        <nav class="flex items-center gap-2 sm:gap-3">
+            <a href="../index.php" class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-brand-400/40 hover:bg-white/5 sm:text-sm">Home</a>
+            <a href="login.php" class="rounded-full border border-white/10 px-4 py-2 text-xs font-semibold text-slate-200 transition hover:border-brand-400/40 hover:bg-white/5 sm:text-sm">Sign In</a>
+            <a href="register.php" aria-current="page" class="rounded-full border border-brand-400/35 bg-brand-500/10 px-4 py-2 text-xs font-semibold text-brand-200 transition hover:bg-brand-500/20 sm:text-sm">Sign Up</a>
+        </nav>
+    </div>
+</header>
+
+<main class="relative flex min-h-[calc(100vh-81px)] items-start sm:items-center justify-center px-4 py-8 sm:py-10">
 
 <div class="absolute inset-0 pointer-events-none">
     <div class="absolute -top-24 left-10 w-64 h-64 bg-brand-500/25 blur-3xl rounded-full"></div>
