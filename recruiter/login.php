@@ -99,16 +99,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 <body class="min-h-screen bg-slate-950 text-slate-100" style="font-family:Inter,sans-serif;">
     <div class="min-h-screen bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.22),_transparent_30%),radial-gradient(circle_at_bottom_right,_rgba(16,185,129,0.16),_transparent_25%)] px-4 pb-10">
-        <header class="sticky top-0 z-40 -mx-4 mb-8 border-b border-white/10 bg-slate-950/90 px-4 backdrop-blur-xl">
+        <header class="sticky top-0 z-40 -mx-4 mb-6 border-b border-slate-200/70 bg-white/85 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
             <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4 py-4" aria-label="Main navigation">
-                <a href="../index.php" class="flex shrink-0 items-center gap-3" aria-label="SkillTrust home">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-blue-600 to-emerald-400 font-extrabold text-white">ST</span>
-                    <span><span class="block text-sm font-extrabold tracking-wide text-white">SkillTrust</span><span class="hidden text-xs text-slate-400 sm:block">Recruiter Hiring Panel</span></span>
-                </a>
-                <div class="flex items-center gap-2 sm:gap-3">
-                    <a href="../index.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white">Home</a>
-                    <a href="login.php" aria-current="page" class="rounded-xl px-3 py-2 text-sm font-semibold text-white transition hover:bg-white/10">Login</a>
-                    <a href="register.php" class="rounded-xl bg-blue-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-blue-500">Sign up</a>
+                <a href="../index.php" class="inline-flex shrink-0 items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 via-sky-500 to-emerald-400 text-base font-extrabold text-white shadow-soft">ST</span>
+                        <span>
+                            <span class="block text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">SkillTrust</span>
+                            <span class="hidden text-xs text-slate-500 dark:text-slate-400 sm:block">Recruiter Hiring Panel</span>
+                        </span>
+                    </a>
+                <div class="flex items-center gap-1 sm:gap-3">
+                    <a href="../index.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">Home</a>
+                        <a href="login.php" aria-current="page" class="rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">Login</a>
+                        <a href="register.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">Sign up</a>
+                    <button type="button" id="themeToggle" class="hidden sm:inline-flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2 text-sm font-medium text-slate-700 shadow-soft transition hover:border-brand-200 hover:text-brand-700 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white">
+                            <i data-lucide="moon-star" class="h-4 w-4"></i><span id="themeToggleLabel">Dark mode</span>
+                        </button>
                 </div>
             </nav>
         </header>
