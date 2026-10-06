@@ -276,14 +276,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div id="toast" class="pointer-events-none fixed right-5 top-5 z-50 hidden min-w-[280px] rounded-2xl border px-4 py-3 text-sm shadow-glow backdrop-blur"></div>
 
         <div class="mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-            <header class="flex items-center justify-between py-4">
-                <a href="../index.php" class="inline-flex items-center gap-3">
-                    <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 via-sky-500 to-emerald-400 text-base font-extrabold text-white shadow-soft">ST</span>
-                    <span>
-                        <span class="block text-[11px] font-semibold uppercase tracking-[0.32em] text-brand-600 dark:text-brand-100">SkillTrust</span>
-                        <span class="block text-sm font-semibold text-slate-700 dark:text-slate-200">Recruiter Hiring Panel</span>
-                    </span>
-                </a>
+            <header class="sticky top-0 z-40 -mx-4 mb-6 border-b border-slate-200/70 bg-white/85 px-4 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/85">
+                <nav class="mx-auto flex max-w-7xl items-center justify-between gap-4 py-4" aria-label="Main navigation">
+                    <a href="../index.php" class="inline-flex shrink-0 items-center gap-3">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-500 via-sky-500 to-emerald-400 text-base font-extrabold text-white shadow-soft">ST</span>
+                        <span>
+                            <span class="block text-sm font-extrabold tracking-wide text-slate-900 dark:text-white">SkillTrust</span>
+                            <span class="hidden text-xs text-slate-500 dark:text-slate-400 sm:block">Recruiter Hiring Panel</span>
+                        </span>
+                    </a>
+                    <div class="flex items-center gap-1 sm:gap-3">
+                        <a href="../index.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">Home</a>
+                        <a href="login.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">Login</a>
+                        <a href="register.php" aria-current="page" class="rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">Sign up</a>
+                    </div>
+                </nav>
+            </header>
 
                 <button
                     type="button"
