@@ -56,9 +56,27 @@ $countQueries = [
     'totalRecruiters' => 'SELECT COUNT(*) AS c FROM recruiters',
     'approvedRecruiters' => "SELECT COUNT(*) AS c FROM recruiters WHERE LOWER(status) = 'approved'",
     'pendingRecruiters' => "SELECT COUNT(*) AS c FROM recruiters WHERE LOWER(status) = 'pending'",
-    'activeTests' => 'SELECT COUNT(*) AS c FROM tests WHERE start_datetime <= NOW() AND expiry_datetime >= NOW()',
-    'expiredTests' => 'SELECT COUNT(*) AS c FROM tests WHERE expiry_datetime < NOW()',
 ];
+
+foreach ($countQueries as $key => $sql) {
+    ${$key} = dashboard_fetch_count($conn, $sql);
+}
+
+$hasTestsStart = dashboard_has_column($conn, 'tests', 'start_datetime');
+$hasTestsExpiry = dashboard_has_column($conn, 'tests', 'expiry_datetime');
+if ($hasTestsStart && $hasTestsExpiry) {
+    $activeTests = dashboard_fetch_count(
+        $conn,
+        'SELECT COUNT(*) AS c FROM tests WHERE start_datetime <= NOW() AND expiry_datetime >= NOW()'
+    );
+    $expiredTests = dashboard_fetch_count(
+        $conn,
+        'SELECT COUNT(*) AS c FROM tests WHERE expiry_datetime < NOW()'
+    );
+} else {
+    $activeTests = 0;
+    $expiredTests = 0;
+}
 
 foreach ($countQueries as $key => $sql) {
     ${$key} = dashboard_fetch_count($conn, $sql);
@@ -104,10 +122,25 @@ for ($i = 6; $i >= 0; $i--) {
     $weeklyCounts[] = (int) ($map[$day] ?? 0);
 }
 
+$hasTestTitle = dashboard_has_column($conn, 'tests', 'title');
+$hasTestName = dashboard_has_column($conn, 'tests', 'test_name');
+$hasTestCategory = dashboard_has_column($conn, 'tests', 'category');
+$hasTestStart = dashboard_has_column($conn, 'tests', 'start_datetime');
+$hasTestExpiry = dashboard_has_column($conn, 'tests', 'expiry_datetime');
+
+$testNameColumn = $hasTestTitle ? 't.title' : ($hasTestName ? 't.test_name' : "CONCAT('Test #', t.id)");
+$categoryColumn = $hasTestCategory ? "COALESCE(t.category, 'Uncategorized')" : "'Uncategorized'";
+$startColumn = $hasTestStart ? 't.start_datetime' : 'NULL';
+$expiryColumn = $hasTestExpiry ? 't.expiry_datetime' : 'NULL';
+
 $recentTestsSql = "
-    SELECT t.id, t.test_name, t.start_datetime, t.expiry_datetime, c.name AS category_name
+    SELECT
+        t.id,
+        {$testNameColumn} AS test_name,
+        {$startColumn} AS start_datetime,
+        {$expiryColumn} AS expiry_datetime,
+        {$categoryColumn} AS category_name
     FROM tests t
-    LEFT JOIN categories c ON c.id = t.category_id
     ORDER BY t.id DESC
     LIMIT 5
 ";
@@ -125,14 +158,14 @@ if ($recentTestsRes) {
     $recentTestsRes->free();
 }
 
-$recentUsersSql = "SELECT name, email, status FROM users ORDER BY id DESC LIMIT 5";
+$recentUsersSql = "SELECT name, email FROM users ORDER BY id DESC LIMIT 5";
 $recentUsersRes = $conn->query($recentUsersSql);
 if ($recentUsersRes) {
     while ($row = $recentUsersRes->fetch_assoc()) {
         $recentUsers[] = [
             'name' => (string) ($row['name'] ?? ''),
             'email' => (string) ($row['email'] ?? ''),
-            'status' => strtolower((string) ($row['status'] ?? 'active')),
+            'status' => 'active',
         ];
     }
     $recentUsersRes->free();
