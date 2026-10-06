@@ -12,14 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int) ($_POST['user_id'] ?? 0);
     if ($id > 0) {
         if ($action === 'toggle_block') {
-            $stmt = $conn->prepare("UPDATE users SET status = CASE WHEN LOWER(status)='blocked' THEN 'active' ELSE 'blocked' END WHERE id=? LIMIT 1");
-            if ($stmt) {
-                $stmt->bind_param('i', $id);
-                if ($stmt->execute()) {
-                    $toastType = 'success';
-                    $toastMsg = 'Student status updated.';
+            if (!db_column_exists($conn, 'users', 'status')) {
+                $toastType = 'error';
+                $toastMsg = 'Block/Unblock is unavailable because the users table has no status column.';
+            } else {
+                $stmt = $conn->prepare("UPDATE users SET status = CASE WHEN LOWER(status)='blocked' THEN 'active' ELSE 'blocked' END WHERE id=? LIMIT 1");
+                if ($stmt) {
+                    $stmt->bind_param('i', $id);
+                    if ($stmt->execute()) {
+                        $toastType = 'success';
+                        $toastMsg = 'Student status updated.';
+                    } else {
+                        $toastMsg = 'Could not update student status.';
+                    }
+                    $stmt->close();
+                } else {
+                    $toastMsg = 'Could not prepare student status update.';
                 }
-                $stmt->close();
             }
         } elseif ($action === 'delete_user') {
             $conn->begin_transaction();
