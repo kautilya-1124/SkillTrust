@@ -63,7 +63,7 @@ if ($sanitizedAnswers === []) {
     skilltrust_fail_submission('Please answer at least one question before submitting.');
 }
 
-$testStmt = $conn->prepare('SELECT id FROM tests WHERE id = ? LIMIT 1');
+$testStmt = $conn->prepare('SELECT id, duration FROM tests WHERE id = ? LIMIT 1');
 if (!$testStmt) {
     skilltrust_fail_submission('Could not validate test.');
 }
@@ -95,14 +95,14 @@ if ($correctByQuestion === []) {
 }
 
 $answeredCount = 0;
-$score = 0;
+$correctCount = 0;
 foreach ($sanitizedAnswers as $questionId => $selectedOption) {
     if (!isset($correctByQuestion[$questionId])) {
         continue;
     }
     $answeredCount++;
     if ((int) $correctByQuestion[$questionId] === $selectedOption) {
-        $score++;
+        $correctCount++;
     }
 }
 
@@ -111,7 +111,7 @@ if ($answeredCount === 0) {
 }
 
 $totalQuestions = count($correctByQuestion);
-$percentage = round(($score / max(1, $totalQuestions)) * 100, 2);
+$percentage = round(($correctCount / max(1, $totalQuestions)) * 100, 2);
 $score = $percentage;
 $durationSeconds = max(60, ((int) ($testRow['duration'] ?? 30)) * 60);
 $elapsedSeconds = is_int($elapsedSeconds) ? max(0, min($elapsedSeconds, $durationSeconds)) : 0;
@@ -249,7 +249,7 @@ if (db_column_exists($conn, 'users', 'phone')) {
 
             $notificationMessage = "Hello {$studentName},\n\n"
                 . "Your result has been declared for {$testTitle}.\n"
-                . 'Score: ' . $score . '/' . $totalQuestions . "\n"
+                . 'Score: ' . $correctCount . '/' . $totalQuestions . "\n"
                 . 'Percentage: ' . number_format($percentage, 2) . "%\n"
                 . 'Status: ' . ucfirst($resultLabel) . "\n\n"
                 . "Check your dashboard for full details.\n\n"
