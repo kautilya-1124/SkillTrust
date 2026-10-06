@@ -63,7 +63,7 @@ if ($sanitizedAnswers === []) {
     skilltrust_fail_submission('Please answer at least one question before submitting.');
 }
 
-$testStmt = $conn->prepare('SELECT id, duration FROM tests WHERE id = ? LIMIT 1');
+$testStmt = $conn->prepare('SELECT id FROM tests WHERE id = ? LIMIT 1');
 if (!$testStmt) {
     skilltrust_fail_submission('Could not validate test.');
 }
@@ -112,13 +112,14 @@ if ($answeredCount === 0) {
 
 $totalQuestions = count($correctByQuestion);
 $percentage = round(($score / max(1, $totalQuestions)) * 100, 2);
-$durationSeconds = max(60, ((int) ($testRow['duration'] ?? 1)) * 60);
+$score = $percentage;
+$durationSeconds = max(60, ((int) ($testRow['duration'] ?? 30)) * 60);
 $elapsedSeconds = is_int($elapsedSeconds) ? max(0, min($elapsedSeconds, $durationSeconds)) : 0;
 $violationCount = is_int($violationCount) ? max(0, $violationCount) : 0;
 $autoSubmitted = $autoSubmitted === 1 ? 1 : 0;
 $submitReason = substr($submitReason, 0, 50);
 
-$insertStmt = $conn->prepare('INSERT INTO results (user_id, test_id, score, percentage) VALUES (?, ?, ?, ?)');
+$insertStmt = $conn->prepare('INSERT INTO results (user_id, test_id, score) VALUES (?, ?, ?)');
 if (!$insertStmt) {
     skilltrust_fail_submission('Could not save result.');
 }
@@ -184,7 +185,7 @@ try {
         throw new RuntimeException($attemptGate['message']);
     }
 
-    $insertStmt->bind_param('iiid', $userId, $testId, $score, $percentage);
+    $insertStmt->bind_param('iid', $userId, $testId, $score);
     if (!$insertStmt->execute()) {
         throw new RuntimeException('Failed to save result.');
     }
