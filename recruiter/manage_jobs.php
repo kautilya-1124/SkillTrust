@@ -214,7 +214,7 @@ if ($hasRequiredTestColumns) {
 }
 if ($hasJobRequiredTestsTable) {
     $selectColumns[] = '(SELECT COUNT(*) FROM job_required_tests jrt WHERE jrt.job_id = j.id) AS required_tests_count';
-    $selectColumns[] = '(SELECT GROUP_CONCAT(CONCAT(t.title, " >= ", FORMAT(jrt.min_score, 2)) ORDER BY t.title SEPARATOR " | ") FROM job_required_tests jrt INNER JOIN tests t ON t.id = jrt.test_id WHERE jrt.job_id = j.id) AS required_tests_summary';
+    $selectColumns[] = "(SELECT GROUP_CONCAT(CONCAT(t.title, ' >= ', FORMAT(jrt.min_score, 2)) ORDER BY t.title SEPARATOR ' | ') FROM job_required_tests jrt INNER JOIN tests t ON t.id = jrt.test_id WHERE jrt.job_id = j.id) AS required_tests_summary";
 }
 
 $jobsSql = sprintf(
