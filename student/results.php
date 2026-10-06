@@ -41,7 +41,7 @@ if ($parts !== false && $parts !== []) {
 }
 
 $trust = 0;
-$tStmt = $conn->prepare('SELECT AVG(percentage) AS avg_pct FROM results WHERE user_id = ?');
+$tStmt = $conn->prepare('SELECT AVG(score) AS avg_pct FROM results WHERE user_id = ?');
 if ($tStmt) {
     $tStmt->bind_param('i', $user_id);
     $tStmt->execute();
@@ -74,7 +74,7 @@ if ($countStmt) {
     $total_tests = (int) ($countRow['c'] ?? 0);
 }
 
-$listSql = 'SELECT t.title AS test_title, t.difficulty AS test_difficulty, r.score, r.percentage, r.created_at, r.id AS result_id
+$listSql = 'SELECT t.title AS test_title, r.score, r.created_at, r.id AS result_id
             FROM results r
             INNER JOIN tests t ON t.id = r.test_id
             WHERE r.user_id = ?
@@ -86,9 +86,10 @@ if ($listStmt) {
     $listStmt->execute();
     $listRes = $listStmt->get_result();
     while ($row = $listRes->fetch_assoc()) {
-        $correct = (int) ($row['score'] ?? 0);
-        $pct     = (float) ($row['percentage'] ?? 0);
-        $totalQ  = ($pct > 0.001) ? (int) max(1, (int) round(100 * $correct / $pct)) : ($correct > 0 ? $correct : 1);
+        // Current Aiven schema stores the final percentage in results.score.
+        $pct     = (float) ($row['score'] ?? 0);
+        $correct = 0;
+        $totalQ  = 0;
 
         $created = $row['created_at'] ?? null;
         $dateFmt = '-';
@@ -107,7 +108,7 @@ if ($listStmt) {
         $results[] = [
             'title'        => (string) ($row['test_title'] ?? 'Test'),
             'score'        => round($pct, 2),
-            'difficulty'   => (string) ($row['test_difficulty'] ?? 'Beginner'),
+            'difficulty'   => 'Beginner',
             'correct'      => $correct,
             'total'        => $totalQ,
             'duration_min' => 0,
