@@ -289,18 +289,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <a href="../index.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">Home</a>
                         <a href="login.php" class="rounded-xl px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-white/10 dark:hover:text-white">Login</a>
                         <a href="register.php" aria-current="page" class="rounded-xl bg-brand-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-brand-700">Sign up</a>
+                        <button type="button" id="themeToggle" class="hidden sm:inline-flex items-center gap-2 rounded-xl border border-slate-200/80 bg-white/80 px-3 py-2 text-sm font-medium text-slate-700 shadow-soft transition hover:border-brand-200 hover:text-brand-700 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white">
+                            <i data-lucide="moon-star" class="h-4 w-4"></i><span id="themeToggleLabel">Dark mode</span>
+                        </button>
                     </div>
                 </nav>
-            </header>
-
-                <button
-                    type="button"
-                    id="themeToggle"
-                    class="inline-flex items-center gap-2 rounded-2xl border border-slate-200/80 bg-white/80 px-4 py-2 text-sm font-medium text-slate-700 shadow-soft backdrop-blur transition hover:border-brand-200 hover:text-brand-700 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-200 dark:hover:border-slate-700 dark:hover:text-white"
-                >
-                    <i data-lucide="moon-star" class="h-4 w-4"></i>
-                    <span id="themeToggleLabel">Dark mode</span>
-                </button>
             </header>
 
             <main class="flex flex-1 items-center py-8">
