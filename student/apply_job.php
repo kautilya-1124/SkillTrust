@@ -265,10 +265,10 @@ $conn->begin_transaction();
 
 try {
     $insertSql = $hasAverageSnapshotColumn
-        ? 'INSERT INTO applications (job_id, user_id, average_score_snapshot, status, applied_at)
-           VALUES (?, ?, ?, "applied", NOW())'
-        : 'INSERT INTO applications (job_id, user_id, status, applied_at)
-           VALUES (?, ?, "applied", NOW())';
+        ? "INSERT INTO applications (job_id, user_id, average_score_snapshot, status, applied_at)
+           VALUES (?, ?, ?, 'applied', NOW())"
+        : "INSERT INTO applications (job_id, user_id, status, applied_at)
+           VALUES (?, ?, 'applied', NOW())";
 
     $insertStmt = $conn->prepare($insertSql);
 
